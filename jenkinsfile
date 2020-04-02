@@ -1,0 +1,17 @@
+node('master'){
+    stage('continuousdownload'){
+       git 'https://github.com/devopsraji/mavencycle'
+    }
+    stage('continuousbuild'){
+        sh label: '', script: 'mvn package'
+    }
+    stage('continuousDeployment'){
+      sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/scriptedpipeline/webapp/target/webapp.war ubuntu@172.31.34.50:/var/lib/tomcat8/webapps/testapp.war'
+    }
+    stage('continuousTesting'){
+     git 'https://github.com/devopsraji/FunctionalTesting'   
+    }
+    stage('continuousDelivery'){
+        sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/scriptedpipeline/webapp/target/webapp.war ubuntu@172.31.17.204:/var/lib/tomcat8/webapps/testapp.war'
+    }
+}
